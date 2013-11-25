@@ -7,10 +7,19 @@
   <groupId>com.facebook</groupId>
   <artifactId>facebook-android-sdk</artifactId>
   <version>3.5.2-SNAPSHOT</version>
+  <packaging>apklib</packaging>
 
+  <parent>
+    <groupId>com.facebook</groupId>
+    <artifactId>parent</artifactId>
+    <version>3.5.2-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  
   <properties>
     <android.version>4.0.1.2</android.version>
     <android-support.version>r7</android-support.version>
+    <android.platform>14</android.platform>
   </properties>
 
   <dependencies>
@@ -19,6 +28,11 @@
       <artifactId>android</artifactId>
       <scope>provided</scope>
       <version>${android.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.android</groupId>
+      <artifactId>annotations</artifactId>
+      <version>4.1.1.4</version>
     </dependency>
 
     <dependency>
@@ -33,4 +47,23 @@
       <version>20090211</version>
     </dependency>
   </dependencies>
+
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+				<configuration>
+					<sdk>
+						<platform>${android.platform}</platform>
+					</sdk>
+					<undeployBeforeDeploy>true</undeployBeforeDeploy>
+				</configuration>
+				<extensions>true</extensions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
