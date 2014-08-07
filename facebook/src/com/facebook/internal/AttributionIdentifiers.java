@@ -19,8 +19,9 @@ package com.facebook.internal;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Looper;
 import android.util.Log;
-
+import com.facebook.FacebookException;
 import com.facebook.android.BuildConfig;
 import java.lang.reflect.Method;
 
@@ -52,6 +53,11 @@ public class AttributionIdentifiers {
     private static AttributionIdentifiers getAndroidId(Context context) {
         AttributionIdentifiers identifiers = new AttributionIdentifiers();
         try {
+            // We can't call getAdvertisingIdInfo on the main thread or the app will potentially
+            // freeze, if this is the case throw:
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                throw new FacebookException("getAndroidId cannot be called on the main thread.");
+            }
             Method isGooglePlayServicesAvailable = null;
             if (BuildConfig.TEST_GOOGLE_PLAY)
             {
