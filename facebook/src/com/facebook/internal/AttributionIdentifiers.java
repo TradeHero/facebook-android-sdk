@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
+import com.facebook.android.BuildConfig;
 import java.lang.reflect.Method;
 
 /**
@@ -51,11 +52,15 @@ public class AttributionIdentifiers {
     private static AttributionIdentifiers getAndroidId(Context context) {
         AttributionIdentifiers identifiers = new AttributionIdentifiers();
         try {
-            Method isGooglePlayServicesAvailable = Utility.getMethodQuietly(
-                    "com.google.android.gms.common.GooglePlayServicesUtil",
-                    "isGooglePlayServicesAvailable",
-                    Context.class
-            );
+            Method isGooglePlayServicesAvailable = null;
+            if (BuildConfig.TEST_GOOGLE_PLAY)
+            {
+                isGooglePlayServicesAvailable = Utility.getMethodQuietly(
+                        "com.google.android.gms.common.GooglePlayServicesUtil",
+                        "isGooglePlayServicesAvailable",
+                        Context.class
+                );
+            }
 
             if (isGooglePlayServicesAvailable == null) {
                 return identifiers;
@@ -66,11 +71,15 @@ public class AttributionIdentifiers {
                 return identifiers;
             }
 
-            Method getAdvertisingIdInfo = Utility.getMethodQuietly(
-                    "com.google.android.gms.ads.identifier.AdvertisingIdClient",
-                    "getAdvertisingIdInfo",
-                    Context.class
-            );
+            Method getAdvertisingIdInfo = null;
+            if (BuildConfig.TEST_GOOGLE_PLAY)
+            {
+                getAdvertisingIdInfo = Utility.getMethodQuietly(
+                        "com.google.android.gms.ads.identifier.AdvertisingIdClient",
+                        "getAdvertisingIdInfo",
+                        Context.class
+                );
+            }
             if (getAdvertisingIdInfo == null) {
                 return identifiers;
             }
